@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './components/HomeScreen';
+import BookNew from './components/BookNew';
 import MyBooking from './components/MyBooking';
 import myProfile from './components/MyProfile';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -35,7 +35,7 @@ export default function App() {
                 tabBarActiveTintColor: '#02bdc9',
                 tabBarInactiveTintColor: 'gray',
               })}>
-        <Tab.Screen name="Book" component={HomeScreen} />
+        <Tab.Screen name="Book" component={BookNew} />
         <Tab.Screen name="My Bookings" component={MyBooking} />
         <Tab.Screen name="Profile" component={myProfile} />
       </Tab.Navigator>
