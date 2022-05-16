@@ -1,14 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Calendar,CalendarProps } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
+import Login_Register from './Login_Register';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 //Home component
 export default function BookNew() {
-  const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
-const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
-const workout = {key: 'workout', color: 'green'};
+  const Stack = createNativeStackNavigator();
 const disabled_color = '#e68f8d';
-  state = {
+const  state = {
     markedDates: {
       "2022-05-16": { color: disabled_color },
       "2022-05-17": { color: disabled_color },
@@ -22,6 +23,7 @@ const disabled_color = '#e68f8d';
 }
 
   return (
+    
     <View style={styles.container}>
       <Calendar
           style={styles.calendar}
@@ -38,6 +40,7 @@ const disabled_color = '#e68f8d';
        }}
       />
       </View>
+
       );
 }
 

@@ -6,12 +6,15 @@ import BookNew from './components/BookNew';
 import MyBooking from './components/MyBooking';
 import myProfile from './components/MyProfile';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+import { useState } from 'react';
+import Login_Register from './components/Login_Register';
+//import { UserAuthContextProvider } from './context/UserAuthContext';
 const Tab = createBottomTabNavigator();
 
 //Home component
 
 export default function App() {
+  const [user, setUser] = useState(false)
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -27,19 +30,27 @@ export default function App() {
                     iconName = focused ? 'clipboard' : 'clipboard-outline';
                   }else if (route.name === 'Profile') {
                     iconName = focused ? 'person' : 'person-outline';
+                  }else if (route.name === 'Login/Register') {
+                    iconName = focused ? 'log-in' : 'log-in-outline';
                   }
       
-                  // You can return any component that you like here!
-                  return <Ionicons name={iconName} size={size} color={color} />;
+                  // You can return any component that you rlike here!
+                  return <Ionicons name={iconName} size={size} color={color} />; 
                 },
                 tabBarActiveTintColor: '#02bdc9',
                 tabBarInactiveTintColor: 'gray',
               })}>
         <Tab.Screen name="Book" component={BookNew} />
         <Tab.Screen name="My Bookings" component={MyBooking} />
-        <Tab.Screen name="Profile" component={myProfile} />
+        {
+        user
+        ? <Tab.Screen name="Profile" component={myProfile} />
+        : <Tab.Screen name="Login/Register" component={Login_Register} />
+        }
+        
       </Tab.Navigator>
     </NavigationContainer>
+
   );
 }
 
