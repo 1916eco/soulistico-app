@@ -2,12 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import Login_Register from './Login_Register';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {useUserAuth} from "../context/UserAuthContext";
 
 //Home component
 export default function BookNew() {
-  const Stack = createNativeStackNavigator();
+  const {user} = useUserAuth();
+
 const disabled_color = '#e68f8d';
 const  state = {
     markedDates: {
@@ -25,7 +25,13 @@ const  state = {
   return (
     
     <View style={styles.container}>
-      <Calendar
+{
+!user
+?       <Text>Login to add new Bookings!</Text>
+
+: null
+}      
+<Calendar
           style={styles.calendar}
           minDate={Date()}
           maxDate={'2023-01-31'}

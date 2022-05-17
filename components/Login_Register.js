@@ -1,17 +1,49 @@
+import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { StyleSheet, Text, KeyboardAvoidingView, TextInput, View, Button, TouchableOpacity, Switch } from 'react-native';
+import {useUserAuth} from "../context/UserAuthContext";
+
 //Home component
 export default function Login_Register() {
   const [IsLogIn, setIsLogin] = useState(false);
-  const toggleSwitch = () => setIsLogin(previousState => !previousState);
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const {user, signUp,logIn,logOut,updateUserProfile} = useUserAuth();
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    if (user) {
+      navigation.navigate("Book");
+    }
+  }, [user])
+  
+  const handleSignUp = () => {
+    signUp(email,password)
+    .then(()=>{
+    updateUserProfile(name)
+    if(user){
+      navigation.navigate("Book");
+    }
+    })
+  }
+  const handleLogin = () => {
+    logIn(email, password)
+    if(user){
+      navigation.navigate("Book");
+    }
+  }
+  const handleLogOut = () => {
+    logOut()
+  }
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
         <TouchableOpacity
         sty
           onPress={() => setIsLogin(!IsLogIn)}
         >
-
     <Text
     style={styles.buttonRed}>
           Would you like to {!IsLogIn ? 'Register?' : 'Login?'}
@@ -21,22 +53,22 @@ export default function Login_Register() {
       <View style={styles.inputContainer}>
       <TextInput 
       placeholder='Email'
-      //value={}
-      //onChangeText={}
+      value={email}
+      onChangeText={text =>setEmail(text)}
       style={styles.input} />
 {
 IsLogIn
 ?       <TextInput 
       placeholder='Name'
-      //value={}
-      //onChangeText={}
+      value={name}
+      onChangeText={text =>setName(text)}
       style={styles.input} />
 : null
 }
       <TextInput 
       placeholder='password'
-      //value={}
-      //onChangeText={}
+      value={password}
+      onChangeText={text =>setPassword(text)}
       style={styles.input} 
       secureTextEntry/>
         
@@ -44,7 +76,7 @@ IsLogIn
       <View style={styles.buttonContainer}>
 {
 !IsLogIn
-?       <TouchableOpacity title="Login" style={styles.button}>
+?       <TouchableOpacity title="Login" style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 : null
@@ -52,8 +84,15 @@ IsLogIn
 
 {
 IsLogIn
-?       <TouchableOpacity title="Register" style={styles.buttonGreen}>
+?       <TouchableOpacity title="Register" style={styles.buttonGreen} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+: null
+}
+{
+user
+?       <TouchableOpacity title="Register" style={styles.buttonGreen} onPress={handleLogOut}>
+        <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
 : null
 }
