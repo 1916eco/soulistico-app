@@ -12,7 +12,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 const TabNavigator = () => {
 const Tab = createBottomTabNavigator();
-const {user} = useUserAuth();
+const {user,admin} = useUserAuth();
 
   return (
 <Tab.Navigator screenOptions={({
@@ -33,7 +33,9 @@ const {user} = useUserAuth();
         iconName = focused ? 'person' : 'person-outline';
       } else if (route.name === 'Login/Register') {
         iconName = focused ? 'log-in' : 'log-in-outline';
-      } // You can return any component that you rlike here!
+      } else if (route.name === 'Admin') {
+        iconName = focused ? 'shield' : 'shield-outline';
+      }
 
 
       return <Ionicons name={iconName} size={size} color={color} />;
@@ -44,6 +46,11 @@ const {user} = useUserAuth();
         <Tab.Screen name="Book" component={BookNew} />
         <Tab.Screen name="My Bookings" component={MyBooking} />
         {user ? <Tab.Screen name="Profile" component={myProfile} /> : <Tab.Screen name="Login/Register" component={Login_Register} />}
+        {
+        admin
+        ? <Tab.Screen name="Admin" component={MyBooking} />
+        : null
+        }
         
       </Tab.Navigator>
   )
