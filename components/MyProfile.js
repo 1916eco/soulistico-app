@@ -15,6 +15,9 @@ export default function MyProfile() {
   }
   return (
     <View style={styles.container}>
+<Text>{user.displayName}</Text>
+<Text>{user.email}</Text>
+
         <Text>{count}</Text>
         <Button
           title="Left button"
