@@ -11,6 +11,7 @@ export default function Login_Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [error, setError] = useState('');
   const {user, signUp,logIn,logOut,updateUserProfile} = useUserAuth();
 
   const navigation = useNavigation();
@@ -19,21 +20,36 @@ export default function Login_Register() {
       navigation.navigate("Book");
     }
   }, [user])
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  },[error])
   
-  const handleSignUp = () => {
-    signUp(email,password)
-    .then(()=>{
-    updateUserProfile(name)
-    if(user){
-      navigation.navigate("Book");
+  const handleSignUp = async () => {
+    try {
+      await signUp(email,password)
+      .then(()=>{
+      updateUserProfile(name)
+      if(user){
+        navigation.navigate("Book");
+      }
+      })
+    } catch (error) {
+      setError(error.message);
     }
-    })
+
   }
-  const handleLogin = () => {
-    logIn(email, password)
-    if(user){
-      navigation.navigate("Book");
+  const handleLogin = async () => {
+    try {
+      await logIn(email, password)
+      if(user){
+        navigation.navigate("Book");
+      }
+    } catch (error) {
+      setError(error.message);
     }
+
   }
   const handleLogOut = () => {
     logOut()
