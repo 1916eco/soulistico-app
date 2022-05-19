@@ -1,10 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
+import { collection, where, query, onSnapshot, deleteDoc, getDocs } from "firebase/firestore";
 import { StyleSheet, Text, View } from 'react-native';
+import { db } from '../firebase';
+import { useState, useEffect } from "react";
+import { useUserAuth } from "../context/UserAuthContext";
+
 //Home component
 export default function MyBooking() {
+  const [userBases, setUserBases] = useState([]);
+  const { user } = useUserAuth();
+
+  useEffect(() => {
+
+    const getLocation = async () => {
+      const appointmentsCollectionRef = collection(db, "appointments");
+      const q = query(appointmentsCollectionRef,where("uid","==",user.uid));
+      const querySnapshot = await getDocs(q);
+      let userBases = [];
+      querySnapshot.forEach((doc) => {
+        userBases.push(doc.data());
+
+      });
+      console.log(userBases);
+      setUserBases(userBases);
+    };
+    
+    if(user){
+      getLocation();
+    }
+  }, [user]);
   return (
     <View style={styles.container}>
       <Text>Bookings!</Text>
+      {userBases.map((item, index) => {
+        return (<View key={index} style={styles.list}>
+          <Text>{item.date}</Text>
+          <Text>{item.name}</Text>
+          <Text>{item.description}</Text>
+          <Text>{item.phone}</Text>
+          <Text>{item.status}</Text>
+          </View>
+        )
+      })
+    }
+
       </View>
       );
 }
@@ -16,4 +55,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  list: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 10,
+    width: '90%',
+  }
 });

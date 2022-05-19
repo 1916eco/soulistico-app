@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import { addDoc, collection } from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View,Modal,Pressable,TextInput } from 'react-native';
 import { Calendar } from 'react-native-calendars';
@@ -15,9 +16,7 @@ export default function BookNew() {
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
   const {user} = useUserAuth();
-  
-  
-
+  const appointmentsCollectionRef = collection(db, "appointments");
   
   useEffect(() => {
     if(user){
@@ -25,7 +24,6 @@ export default function BookNew() {
     }
   }, [])
   
-
 const  state = {
   markedDates: {
     "2022-05-23": { color: disabled_color },
@@ -49,17 +47,16 @@ const handleModal = () => {
 }
 const handleAppointmentRequest = () => {
   if(selectedDay){
-    db.collection('appointments').add({
-      uid:user.uid,
+    addDoc(appointmentsCollectionRef, {
+      UserID:user.uid,
       name:name,
       description:description,
       phone:phone,
       date:selectedDay,
       status:'pending'
-    })
-    .then(()=>{
+    }).then(()=>{
       setModalVisible(false);
-    })
+    });
   }
 }
 

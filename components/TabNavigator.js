@@ -47,7 +47,7 @@ const {user,admin} = useUserAuth();
         <Tab.Screen name="My Bookings" component={MyBooking} />
         {user ? <Tab.Screen name="Profile" component={myProfile} /> : <Tab.Screen name="Login/Register" component={Login_Register} />}
         {
-        admin
+        admin && user
         ? <Tab.Screen name="Admin" component={MyBooking} />
         : null
         }

@@ -10,9 +10,6 @@ export default function MyProfile() {
   const {user,logOut} = useUserAuth();
   const navigation = useNavigation();
 
-  useEffect(() => {
-console.log(user.uid);
-  },[])
   const handleLogOut = () => {
     logOut()
   }
