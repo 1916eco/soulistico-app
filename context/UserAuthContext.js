@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { db } from "../firebase";
+import {doc,collection, where,query, getDoc} from 'firebase/firestore';
 
 
 const userAuthContext = createContext();
@@ -13,12 +14,18 @@ export function UserAuthContextProvider({ children }) {
 
   useEffect(() => {
     if(user){
-      db.collection('Admins').doc(user.uid).get().then(doc => {
-        if(doc.exists){
+      const myDoc = doc(db,"Admins", "Admin");
+      getDoc(myDoc).then((doc)=>{
+        if(doc.data().uid === user.uid){
           setAdmin(true);
+        }else{
+          setAdmin(false);
         }
+      }).catch((err)=>{
+        console.log(err);
       })
     }
+
   }, [user])
   // Each function is imported from the firebase library and is used by the context provider which is used by the components
   function logIn(email, password) {

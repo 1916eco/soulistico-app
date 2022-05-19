@@ -10,6 +10,9 @@ export default function MyProfile() {
   const {user,logOut} = useUserAuth();
   const navigation = useNavigation();
 
+  useEffect(() => {
+console.log(user.uid);
+  },[])
   const handleLogOut = () => {
     logOut()
   }
@@ -17,6 +20,7 @@ export default function MyProfile() {
     <View style={styles.container}>
 <Text>{user.displayName}</Text>
 <Text>{user.email}</Text>
+<Text>{user.uid}</Text>
 
         <Text>{count}</Text>
         <Button
