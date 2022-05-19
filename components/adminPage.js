@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { collection, where, query, doc, deleteDoc, getDocs, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, where, query, doc, deleteDoc, getDocs, onSnapshot, orderBy, updateDoc } from "firebase/firestore";
 import { StyleSheet, Text, View,TouchableOpacity,Button,Alert } from 'react-native';
 import { db } from '../firebase';
 import { useState, useEffect } from "react";
@@ -11,20 +11,11 @@ export default function MyBooking() {
   const { user } = useUserAuth();
 
 
-
-  const deleteHandler = (id) => {
-    Alert.alert(
-      "Delete Appointment",
-      "Are you sure you want to delete this appointment?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "Yes", onPress: () => deleteDoc(doc(db, "appointments", id)) }
-      ]
-    );
+  const acceptHandler = (id) => {
+    updateDoc(doc(db, "appointments", id), {status: "accepted"});
+  }
+  const rejectHandler = (id) => {
+    updateDoc(doc(db, "appointments", id), {status: "rejected"});
     
   };
   useEffect(() => {
@@ -55,7 +46,10 @@ export default function MyBooking() {
           <Text>{item.description}</Text>
           <Text>{item.phone}</Text>
           <Text>{item.status}</Text>
-          <Button title='X' color={"red"} onPress={()=>{deleteHandler(item.id)}}></Button>
+          <View style={styles.buttonsContainer}>
+          <Button title='X Reject' color={"red"} style={styles.button} onPress={()=>{rejectHandler(item.id)}}></Button>
+          <Button title='✓ Accept' color={"green"} style={styles.button} onPress={()=>{acceptHandler(item.id)}}></Button>
+          </View>
           </View>
         )
       })
@@ -77,5 +71,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     marginBottom: 10,
     width: '90%',
+  },
+  buttonsContainer:{
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  },
+  button:{
+    margin: 10,
+    paddingHorizontal: 20,
+    backgroundColor: 'red',
   }
 });
