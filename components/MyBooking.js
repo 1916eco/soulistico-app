@@ -1,39 +1,52 @@
 import { StatusBar } from 'expo-status-bar';
 import { collection, where, query, doc, deleteDoc, getDocs, onSnapshot, orderBy } from "firebase/firestore";
-import { StyleSheet, Text, View,TouchableOpacity,Button } from 'react-native';
+import { StyleSheet, Text, View,Alert,Button } from 'react-native';
 import { db } from '../firebase';
 import { useState, useEffect } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
 
 //Home component
 export default function MyBooking() {
-  const [userBases, setUserBases] = useState([]);
-  const { user } = useUserAuth();
+  const [userBases, setUserAppointments] = useState([]);
+  const { user ,admin} = useUserAuth();
 
 
 
-  // const deleteHandler = (id) => {
-  //   deleteDoc(doc(db, "appointments", id));
-  // };
+  const deleteHandler = (id) => {
+    Alert.alert(
+      "Delete Appointment",
+      "Are you sure you want to delete this appointment?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Yes", onPress: () => deleteDoc(doc(db, "appointments", id)) }
+      ]
+    );
+    
+  };
   useEffect(() => {
 
-    const getLocation = async () => {
+    const getAppointments = async () => {
       const appointmentsCollectionRef = collection(db, "appointments");
-      const q = query(appointmentsCollectionRef,where("uid","==",user.uid),orderBy("date","asc"));
-      //const querySnapshot = await getDocs(q);
+      if(admin){
+        var q = query(appointmentsCollectionRef,where("status","==","accepted"));
+      }else{
+        var q = query(appointmentsCollectionRef,where("uid","==",user.uid),orderBy("date","asc"));
+      }
       
       onSnapshot(q, (querySnapshot) => {
-      let userBases = [];
+      let userAppointments = [];
       querySnapshot.forEach((doc) => {
-        userBases.push(doc.data());
-
+        userAppointments.push({...doc.data(),id: doc.id});
       });
-      console.log(userBases);
-      setUserBases(userBases);
+      setUserAppointments(userAppointments);
       });
     };
     if(user){
-      getLocation();
+      getAppointments();
     }
   }, [user]);
   return (
@@ -46,7 +59,7 @@ export default function MyBooking() {
           <Text>{item.description}</Text>
           <Text>{item.phone}</Text>
           <Text>{item.status}</Text>
-          <Button title='X' color={"red"} ></Button>
+          <Button title='X' color={"red"} onPress={()=>{deleteHandler(item.id)}}></Button>
           </View>
         )
       })
