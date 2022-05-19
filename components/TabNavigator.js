@@ -6,6 +6,7 @@ import { useUserAuth } from '../context/UserAuthContext';
 import BookNew from './BookNew';
 import MyBooking from './MyBooking';
 import myProfile from './MyProfile';
+import adminPage from './adminPage';
 import Login_Register from './Login_Register';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -48,7 +49,7 @@ const {user,admin} = useUserAuth();
         {user ? <Tab.Screen name="Profile" component={myProfile} /> : <Tab.Screen name="Login/Register" component={Login_Register} />}
         {
         admin && user
-        ? <Tab.Screen name="Admin" component={MyBooking} />
+        ? <Tab.Screen name="Admin" component={adminPage} />
         : null
         }
         

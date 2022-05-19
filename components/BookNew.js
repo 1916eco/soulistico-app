@@ -48,7 +48,7 @@ const handleModal = () => {
 const handleAppointmentRequest = () => {
   if(selectedDay){
     addDoc(appointmentsCollectionRef, {
-      UserID:user.uid,
+      uid:user.uid,
       name:name,
       description:description,
       phone:phone,

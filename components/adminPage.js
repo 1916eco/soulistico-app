@@ -19,7 +19,7 @@ export default function MyBooking() {
 
     const getLocation = async () => {
       const appointmentsCollectionRef = collection(db, "appointments");
-      const q = query(appointmentsCollectionRef,where("uid","==",user.uid),orderBy("date","asc"));
+      const q = query(appointmentsCollectionRef,where("status","==","pending"));
       //const querySnapshot = await getDocs(q);
       
       onSnapshot(q, (querySnapshot) => {
