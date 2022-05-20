@@ -29,15 +29,12 @@ export default function MyBooking() {
   };
   useEffect(() => {
 
-    const getAppointments = async () => {
-      const appointmentsCollectionRef = collection(db, "appointments");
-      if(admin){
-        var q = query(appointmentsCollectionRef,where("status","==","accepted"));
-      }else{
-        var q = query(appointmentsCollectionRef,where("uid","==",user.uid),orderBy("date","asc"));
-      }
+    const appointmentsCollectionRef = collection(db, "appointments");
+
+
+    const getAppointments = async (queryThing) => {
       
-      onSnapshot(q, (querySnapshot) => {
+      onSnapshot(queryThing, (querySnapshot) => {
       let userAppointments = [];
       querySnapshot.forEach((doc) => {
         userAppointments.push({...doc.data(),id: doc.id});
@@ -46,7 +43,14 @@ export default function MyBooking() {
       });
     };
     if(user){
-      getAppointments();
+    if(admin){
+      var queryThing = query(appointmentsCollectionRef,where("status","==","accepted"));
+    }else{
+      var queryThing = query(appointmentsCollectionRef,where("uid","==",user.uid),orderBy("date","asc"));
+    }
+      getAppointments(queryThing);
+    }else{
+      setUserAppointments([])
     }
   }, [user]);
   return (
@@ -57,6 +61,11 @@ export default function MyBooking() {
           <Text>{item.date}</Text>
           <Text>{item.name}</Text>
           <Text>{item.description}</Text>
+          {
+          item.rejectionReason
+          ? <Text>{item.rejectionReason}</Text>
+          : null
+          }
           <Text>{item.phone}</Text>
           <Text>{item.status}</Text>
           <Button title='X' color={"red"} onPress={()=>{deleteHandler(item.id)}}></Button>
