@@ -55,8 +55,19 @@ export default function MyBooking() {
   }, [user]);
   return (
     <View style={styles.container}>
-      <Text>Bookings!</Text>
-      {userBases.map((item, index) => {
+{
+!user
+?<Text>Login to see bookings!</Text>
+
+:null
+}
+{
+user && userBases.length>0
+? <Text>You have no bookings Yet!</Text>
+: null
+}
+
+{userBases.map((item, index) => {
         return (<View key={index} style={styles.list}>
           <Text>{item.date}</Text>
           <Text>{item.name}</Text>
